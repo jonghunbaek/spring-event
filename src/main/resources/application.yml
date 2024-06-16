@@ -2,9 +2,14 @@ spring:
   application:
     name: spring-event
 
-  config:
-    activate:
-      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
 
   #JPA ??
   jpa:
