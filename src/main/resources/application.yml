@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: spring-event
+
+  config:
+    activate:
+      on-profile: test
+
+  #JPA ??
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true # (2.5~) Hibernate ??? ?? data.sql ??
+
+  #Redis ??
+  data:
+    redis:
+      host: localhost
+      port: 6379
