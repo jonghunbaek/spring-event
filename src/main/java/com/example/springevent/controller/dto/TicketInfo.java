@@ -11,8 +11,11 @@ public class TicketInfo {
 
     private int remainingTimes;
 
-    public TicketInfo(String title, int remainingTimes) {
+    private long memberId;
+
+    public TicketInfo(String title, int remainingTimes, long memberId) {
         this.title = title;
         this.remainingTimes = remainingTimes;
+        this.memberId = memberId;
     }
 }

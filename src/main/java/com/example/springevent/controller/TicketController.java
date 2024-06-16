@@ -17,6 +17,6 @@ public class TicketController {
 
     @PostMapping
     public void createTicket(@RequestBody TicketInfo ticketInfo) {
-        ticketService.createTicket(ticketInfo.getTitle(), ticketInfo.getRemainingTimes());
+        ticketService.createTicket(ticketInfo.getTitle(), ticketInfo.getRemainingTimes(), ticketInfo.getMemberId());
     }
 }
