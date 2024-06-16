@@ -1,9 +1,6 @@
 package com.example.springevent.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -17,8 +14,12 @@ public class ConsumableTicket {
 
     private int remainingTimes;
 
-    public ConsumableTicket(String title, int remainingTimes) {
+    @ManyToOne
+    private Member member;
+
+    public ConsumableTicket(String title, int remainingTimes, Member member) {
         this.title = title;
         this.remainingTimes = remainingTimes;
+        this.member = member;
     }
 }
