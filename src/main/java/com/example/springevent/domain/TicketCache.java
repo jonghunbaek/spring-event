@@ -21,4 +21,10 @@ public class TicketCache {
         this.memberId = memberId;
         this.remainingTimes = remainingTimes;
     }
+
+    public void validateRemainingTimes() {
+        if (remainingTimes <= 0) {
+            throw new IllegalArgumentException("해당 이용권의 사용횟수는 모두 소진되었습니다.");
+        }
+    }
 }

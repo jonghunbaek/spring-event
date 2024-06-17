@@ -22,4 +22,8 @@ public class ConsumableTicket {
         this.remainingTimes = remainingTimes;
         this.member = member;
     }
+
+    public void deductRemainigTimes() {
+        this.remainingTimes--;
+    }
 }
