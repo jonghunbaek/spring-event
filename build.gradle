@@ -26,6 +26,9 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    // CACHE
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+
     // AUTH
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation "io.jsonwebtoken:jjwt:0.12.3"
