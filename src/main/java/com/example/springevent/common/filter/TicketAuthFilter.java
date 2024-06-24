@@ -1,4 +1,4 @@
-package com.example.springevent.filter;
+package com.example.springevent.common.filter;
 
 import com.example.springevent.domain.TicketCache;
 import jakarta.servlet.FilterChain;
@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,20 +19,22 @@ import java.util.Optional;
 @Component
 public class TicketAuthFilter extends OncePerRequestFilter {
 
+    private final ApplicationEventPublisher eventPublisher;
     private final CacheManager cacheManager;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Cache cache = cacheManager.getCache("ticket");
 
+        // jwt에서 memberId 꺼내는 로직 추가
         // memberId로 캐시 조회 - 현재는 임시로
-        Optional<TicketCache> ticketCache = Optional.ofNullable(cache.get(1L, TicketCache.class));
+        Optional<TicketCache> ticketCacheOpt = Optional.ofNullable(cache.get(1L, TicketCache.class));
 
-        if (ticketCache.isEmpty()) {
-            throw new IllegalArgumentException("존재하는 이용권이 없습니다.");
+        if (ticketCacheOpt.isEmpty()) {
+            eventPublisher.publishEvent(1L);
         }
 
-        ticketCache.get().validateRemainingTimes();
+        ticketCacheOpt.get().validateRemainingTimes();
 
         filterChain.doFilter(request, response);
     }

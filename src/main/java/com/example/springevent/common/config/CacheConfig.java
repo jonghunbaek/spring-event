@@ -1,4 +1,4 @@
-package com.example.springevent.config;
+package com.example.springevent.common.config;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
