@@ -1,8 +1,9 @@
-package com.example.springevent.event;
+package com.example.springevent.common.event;
 
 import com.example.springevent.domain.ConsumableTicket;
 import com.example.springevent.domain.TicketCache;
 import com.example.springevent.repository.ConsumableTicketRepository;
+import com.example.springevent.service.MainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
@@ -22,7 +23,7 @@ public class TicketEventListener {
     private final CacheManager cacheManager;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT) // 이벤트 발행된 곳의 트랜잭션 커밋 후에만 실행
+    @TransactionalEventListener(value = MainService.class, phase = TransactionPhase.AFTER_COMMIT) // 이벤트가 발행된 곳의 트랜잭션 커밋 후에만 실행
     public void ticketCountDeductor(long memberId) {
         ConsumableTicket consumableTicket = ticketRepository.findByMemberId(memberId)
                 .orElseThrow();
