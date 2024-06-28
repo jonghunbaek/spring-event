@@ -1,13 +1,10 @@
 package com.example.springevent.common.event;
 
+import com.example.springevent.common.cache.TicketCacheManager;
 import com.example.springevent.domain.ConsumableTicket;
-import com.example.springevent.domain.TicketCache;
-import com.example.springevent.repository.ConsumableTicketRepository;
 import com.example.springevent.service.MainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,17 +16,15 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 public class TicketEventListener {
 
-    private final ConsumableTicketRepository ticketRepository;
-    private final CacheManager cacheManager;
+    private final TicketCacheManager ticketCacheManager;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @TransactionalEventListener(value = MainService.class, phase = TransactionPhase.AFTER_COMMIT) // 이벤트가 발행된 곳의 트랜잭션 커밋 후에만 실행
+    @TransactionalEventListener(value = MainService.class, phase = TransactionPhase.BEFORE_COMMIT) // 이벤트가 발행된 곳의 트랜잭션 커밋 전에 실행
     public void ticketCountDeductor(long memberId) {
-        ConsumableTicket consumableTicket = ticketRepository.findByMemberId(memberId)
-                .orElseThrow();
+        ConsumableTicket consumableTicket = ticketCacheManager.getTicket(memberId);
 
         consumableTicket.deductRemainigTimes();
-        Cache cache = cacheManager.getCache("ticket");
-        cache.put(1L, new TicketCache(memberId, consumableTicket.getRemainingTimes()));
+
+        ticketCacheManager.updateTicketCache(consumableTicket);
     }
 }

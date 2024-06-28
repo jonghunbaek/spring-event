@@ -15,10 +15,8 @@ public class MainService {
 
     @Transactional
     public void getMessage(long memberId, String message) {
-        log.info("message :: {}", message);
-
-        // 비즈니스 로직 수행
-
         eventPublisher.publishEvent(memberId);
+        // 이용권 검증 및 횟수 차감 후 비즈니스 로직 수행
+        log.info("message :: {}", message);
     }
 }

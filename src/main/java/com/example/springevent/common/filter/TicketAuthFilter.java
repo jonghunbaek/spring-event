@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.springframework.http.HttpHeaders.*;
 
@@ -26,7 +24,6 @@ import static org.springframework.http.HttpHeaders.*;
 @Component
 public class TicketAuthFilter extends OncePerRequestFilter {
 
-    private final ApplicationEventPublisher eventPublisher;
     private final CacheManager cacheManager;
 
     @Override
@@ -47,13 +44,10 @@ public class TicketAuthFilter extends OncePerRequestFilter {
         TicketCache ticketCache;
         try {
             ticketCache = cache.get(memberId, TicketCache.class);
+            ticketCache.validateRemainingTimes();
         } catch (NullPointerException e) {
-            eventPublisher.publishEvent(memberId);
-            ticketCache = cache.get(memberId, TicketCache.class);
+            filterChain.doFilter(request, response);
         }
-
-
-        ticketCache.validateRemainingTimes();
 
         filterChain.doFilter(request, response);
     }
