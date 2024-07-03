@@ -16,7 +16,7 @@ public class ConsumableTicket {
 
     private int remainingTimes;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     public ConsumableTicket(String title, int remainingTimes, Member member) {
