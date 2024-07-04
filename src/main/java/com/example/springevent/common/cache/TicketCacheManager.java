@@ -16,14 +16,15 @@ public class TicketCacheManager {
 
     private final ConsumableTicketRepository ticketRepository;
 
-    @Transactional
-    @Cacheable(key = "#memberId", sync = true, value = "ticket")
+    @Transactional(readOnly = true)
+    @Cacheable(key = "#memberId", value = "ticket")
     public ConsumableTicket getTicket(Long memberId) {
         return ticketRepository.findByMemberId(memberId)
             .orElseThrow(() -> new IllegalStateException("존재하는 이용권이 없습니다."));
     }
 
     @CachePut(key = "#consumableTicket.member.id", value = "ticket")
-    public void updateTicketCache(ConsumableTicket consumableTicket) {
+    public ConsumableTicket updateTicketCache(ConsumableTicket consumableTicket) {
+        return consumableTicket;
     }
 }
