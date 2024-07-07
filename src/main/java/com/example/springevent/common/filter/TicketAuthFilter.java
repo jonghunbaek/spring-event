@@ -21,7 +21,7 @@ import java.util.Map;
 import static org.springframework.http.HttpHeaders.*;
 
 @RequiredArgsConstructor
-@Component
+//@Component
 public class TicketAuthFilter extends OncePerRequestFilter {
 
     private final CacheManager cacheManager;
