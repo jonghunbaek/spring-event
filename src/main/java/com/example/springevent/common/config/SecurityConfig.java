@@ -32,7 +32,9 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/home"),
                     new AntPathRequestMatcher("/h2-console/**"),
                     new AntPathRequestMatcher("/sign-in"),
-                    new AntPathRequestMatcher("/sign-up")
+                    new AntPathRequestMatcher("/sign-up"),
+                    new AntPathRequestMatcher("/main/**"),
+                    new AntPathRequestMatcher("/tickets")
                 ).permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
