@@ -16,6 +16,7 @@ public class TicketCacheManager {
 
     private final ConsumableTicketRepository ticketRepository;
 
+    // TODO :: 캐싱되는 값 엔티티 -> DTO로 변경해야함
     @Transactional(readOnly = true)
     @Cacheable(key = "#memberId", value = "ticket")
     public ConsumableTicket getTicket(Long memberId) {
