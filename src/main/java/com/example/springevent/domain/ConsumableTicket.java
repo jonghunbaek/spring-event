@@ -30,8 +30,8 @@ public class ConsumableTicket {
         this.remainingTimes--;
     }
 
-    private void validateRemainingTimes() {
-        if (remainingTimes < 0) {
+    public void validateRemainingTimes() {
+        if (remainingTimes <= 0) {
             throw new IllegalArgumentException("사용 가능한 이용권 잔여 횟수가 없습니다.");
         }
     }
