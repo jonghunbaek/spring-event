@@ -1,5 +1,6 @@
 package com.example.springevent.common.cache;
 
+import com.example.springevent.common.cache.dto.TicketCache;
 import com.example.springevent.domain.ConsumableTicket;
 import com.example.springevent.repository.ConsumableTicketRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +17,17 @@ public class TicketCacheManager {
 
     private final ConsumableTicketRepository ticketRepository;
 
-    // TODO :: 캐싱되는 값 엔티티 -> DTO로 변경해야함
     @Transactional(readOnly = true)
     @Cacheable(key = "#memberId", value = "ticket")
-    public ConsumableTicket getTicket(Long memberId) {
-        return ticketRepository.findByMemberId(memberId)
-            .orElseThrow(() -> new IllegalStateException("존재하는 이용권이 없습니다."));
+    public TicketCache getTicket(Long memberId) {
+        ConsumableTicket consumableTicket = ticketRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new IllegalStateException("존재하는 이용권이 없습니다."));
+
+        return new TicketCache(memberId, consumableTicket.getRemainingTimes());
     }
 
     @CachePut(key = "#consumableTicket.member.id", value = "ticket")
-    public ConsumableTicket updateTicketCache(ConsumableTicket consumableTicket) {
-        return consumableTicket;
+    public TicketCache updateTicketCache(ConsumableTicket consumableTicket) {
+        return new TicketCache(consumableTicket.getMember().getId(), consumableTicket.getRemainingTimes());
     }
 }

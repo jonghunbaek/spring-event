@@ -1,7 +1,7 @@
 package com.example.springevent.controller;
 
+import com.example.springevent.common.cache.dto.TicketCache;
 import com.example.springevent.controller.dto.TicketInfo;
-import com.example.springevent.domain.ConsumableTicket;
 import com.example.springevent.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ public class TicketController {
     private final TicketService ticketService;
 
     @GetMapping
-    public ConsumableTicket getTicket(@RequestParam String memberId) {
+    public TicketCache getTicket(@RequestParam String memberId) {
         return ticketService.getTicket(Long.parseLong(memberId));
     }
 

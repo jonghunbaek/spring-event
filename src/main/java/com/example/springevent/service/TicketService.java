@@ -1,6 +1,7 @@
 package com.example.springevent.service;
 
 import com.example.springevent.common.cache.TicketCacheManager;
+import com.example.springevent.common.cache.dto.TicketCache;
 import com.example.springevent.domain.ConsumableTicket;
 import com.example.springevent.domain.Member;
 import com.example.springevent.repository.ConsumableTicketRepository;
@@ -28,7 +29,7 @@ public class TicketService {
         ticketRepository.save(consumableTicket);
     }
 
-    public ConsumableTicket getTicket(Long memberId) {
+    public TicketCache getTicket(Long memberId) {
         return ticketCacheManager.getTicket(memberId);
     }
 }

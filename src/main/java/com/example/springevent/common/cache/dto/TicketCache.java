@@ -1,20 +1,15 @@
-package com.example.springevent.domain;
+package com.example.springevent.common.cache.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
 
 @ToString
 @Getter
 @NoArgsConstructor
-@RedisHash
 public class TicketCache {
 
-    @Id
     private Long memberId;
-
     private int remainingTimes;
 
     public TicketCache(Long memberId, int remainingTimes) {
@@ -24,7 +19,7 @@ public class TicketCache {
 
     public void validateRemainingTimes() {
         if (remainingTimes <= 0) {
-            throw new IllegalArgumentException("해당 이용권의 사용횟수는 모두 소진되었습니다.");
+            throw new IllegalArgumentException("사용 가능한 이용권 잔여 횟수가 없습니다.");
         }
     }
 }

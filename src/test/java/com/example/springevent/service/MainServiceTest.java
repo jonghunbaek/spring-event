@@ -1,6 +1,7 @@
 package com.example.springevent.service;
 
 import com.example.springevent.common.cache.TicketCacheManager;
+import com.example.springevent.common.cache.dto.TicketCache;
 import com.example.springevent.domain.ConsumableTicket;
 import com.example.springevent.repository.ConsumableTicketRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -33,9 +34,9 @@ class MainServiceTest {
         mainService.getMessage(1L, "테스트 메세지");
 
         // when
-        ConsumableTicket consumableTicket = ticketCacheManager.getTicket(1L);
+        TicketCache ticket = ticketCacheManager.getTicket(1L);
 
         // then
-        assertThat(consumableTicket.getRemainingTimes()).isEqualTo(9);
+        assertThat(ticket.getRemainingTimes()).isEqualTo(9);
     }
 }

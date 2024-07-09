@@ -16,7 +16,7 @@ public class ConsumableTicket {
 
     private int remainingTimes;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     public ConsumableTicket(String title, int remainingTimes, Member member) {
@@ -30,7 +30,7 @@ public class ConsumableTicket {
         this.remainingTimes--;
     }
 
-    public void validateRemainingTimes() {
+    private void validateRemainingTimes() {
         if (remainingTimes <= 0) {
             throw new IllegalArgumentException("사용 가능한 이용권 잔여 횟수가 없습니다.");
         }

@@ -1,6 +1,7 @@
 package com.example.springevent.common.filter;
 
 import com.example.springevent.common.cache.TicketCacheManager;
+import com.example.springevent.common.cache.dto.TicketCache;
 import com.example.springevent.domain.ConsumableTicket;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +26,9 @@ public class TicketAuthFilter extends OncePerRequestFilter {
 
     private final TicketCacheManager ticketCacheManager;
 
+    /**
+     * 이용권 인증이 필요 없는 경로는 이 필터를 건너뜀
+     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String requestURI = request.getRequestURI();
@@ -32,16 +36,16 @@ public class TicketAuthFilter extends OncePerRequestFilter {
         return requestURI.contains("sign-in") || requestURI.contains("sign-up");
     }
 
+    /**
+     * 이용권이 전혀 존재 하지 않는 경우 - 1차 검증
+     * 이용권의 잔여 이용 횟수가 0이하인 경우 - 2차 검증
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // access token 디코딩해서 사용자 id 추출
         long memberId = getMemberId(request);
 
-        // memberId로 저장된 캐시 조회
-        // 이용권이 전혀 존재 하지 않는 경우 - 1차 검증
-        // 이용권의 잔여 이용 횟수가 0이하인 경우 - 2차 검증
-        ConsumableTicket consumableTicket = ticketCacheManager.getTicket(memberId);
-        consumableTicket.validateRemainingTimes();
+        TicketCache ticket = ticketCacheManager.getTicket(memberId);
+        ticket.validateRemainingTimes();
 
         filterChain.doFilter(request, response);
     }
