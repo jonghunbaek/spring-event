@@ -2,7 +2,6 @@ package com.example.springevent.common.filter;
 
 import com.example.springevent.common.cache.TicketCacheManager;
 import com.example.springevent.common.cache.dto.TicketCache;
-import com.example.springevent.domain.ConsumableTicket;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -27,7 +26,7 @@ public class TicketAuthFilter extends OncePerRequestFilter {
     private final TicketCacheManager ticketCacheManager;
 
     /**
-     * 이용권 인증이 필요 없는 경로는 이 필터를 건너뜀
+     * 이용권 인증이 필요 없는 경로는 이 필터를 하지 않음
      */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {

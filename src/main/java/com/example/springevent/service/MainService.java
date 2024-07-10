@@ -16,7 +16,12 @@ public class MainService {
     @Transactional
     public void getMessage(long memberId, String message) {
         eventPublisher.publishEvent(memberId);
-        // 이용권 검증 및 횟수 차감 후 비즈니스 로직 수행
+        
+        // 비즈니스 로직을 수행했다고 가정
         log.info("message :: {}", message);
+        
+        if ("ex".equals(message)) {
+            throw new IllegalStateException("예외 발생");
+        }
     }
 }

@@ -21,7 +21,7 @@ public class TicketEventListener {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW) // REQUIRES_NEW 아니면 예외 발생
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT) // 이벤트가 발행된 곳의 트랜잭션 커밋 후에 실행
-    public void ticketCountDeductor(Long memberId) {
+    public void deductTicketCount(Long memberId) {
         ConsumableTicket consumableTicket = ticketRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalStateException("존재하는 이용권이 없습니다."));
 
