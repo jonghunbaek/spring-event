@@ -2,7 +2,6 @@ package com.example.springevent.service;
 
 import com.example.springevent.common.cache.TicketCacheManager;
 import com.example.springevent.common.cache.dto.TicketCache;
-import com.example.springevent.domain.ConsumableTicket;
 import com.example.springevent.repository.ConsumableTicketRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,7 @@ class MainServiceTest {
      */
     @DisplayName("메인 서비스의 메서드가 호출되면 이벤트를 발행해 이용권의 개수를 1개 차감한다.")
     @Test
-    void publicEventWheMainServiceCall() {
+    void publishEventWheMainServiceCall() {
         // given
         mainService.getMessage(1L, "테스트 메세지");
 
@@ -38,5 +37,19 @@ class MainServiceTest {
 
         // then
         assertThat(ticket.getRemainingTimes()).isEqualTo(9);
+    }
+
+    @DisplayName("비즈니스 로직에서 예외가 발생하면 이벤트 리스너가 수행되지 않아 이용권")
+    @Test
+    void dontListenWhenException() {
+        // given
+        assertThatThrownBy(() -> mainService.getMessage(1L, "ex"))
+                .isInstanceOf(IllegalStateException.class);
+
+        // when
+        TicketCache ticket = ticketCacheManager.getTicket(1L);
+
+        // then
+        assertThat(ticket.getRemainingTimes()).isEqualTo(10);
     }
 }
