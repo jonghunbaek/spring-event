@@ -39,7 +39,7 @@ class MainServiceTest {
         assertThat(ticket.getRemainingTimes()).isEqualTo(9);
     }
 
-    @DisplayName("비즈니스 로직에서 예외가 발생하면 이벤트 리스너가 수행되지 않아 이용권")
+    @DisplayName("비즈니스 로직에서 예외가 발생하면 이벤트 리스너가 수행되지 않아 이용권 횟수가 차감되지 않는다.")
     @Test
     void dontListenWhenException() {
         // given
