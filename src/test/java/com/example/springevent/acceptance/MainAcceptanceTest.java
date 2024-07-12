@@ -8,17 +8,21 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 
-@SpringBootTest()
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MainAcceptanceTest {
+
+    @LocalServerPort
+    int port;
 
     @Autowired
     JwtManager jwtManager;
 
     @BeforeEach
     void setUp() {
-        RestAssured.baseURI = "http://localhost:8080";
+        RestAssured.port = port;
     }
 
     @DisplayName("메인 API 호출 통합 테스트(이벤트 발행, 구독 확인)")
