@@ -1,8 +1,13 @@
 package com.example.springevent.acceptance;
 
 import com.example.springevent.common.jwt.JwtManager;
+import com.example.springevent.domain.ConsumableTicket;
+import com.example.springevent.repository.ConsumableTicketRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MainAcceptanceTest {
@@ -19,6 +26,9 @@ public class MainAcceptanceTest {
 
     @Autowired
     JwtManager jwtManager;
+
+    @Autowired
+    ConsumableTicketRepository ticketRepository;
 
     @BeforeEach
     void setUp() {
@@ -31,17 +41,25 @@ public class MainAcceptanceTest {
         // given
         String accessToken = jwtManager.createAccessToken(1L);
 
-        RestAssured.given()
+        ExtractableResponse<Response> result = RestAssured.given()
                 .log().all()
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .queryParam("message", "test message")
-        // when
+                // when
                 .when()
-                .get("/1/sample")
-        // then
+                .get("/main/1/sample")
+                // then
                 .then()
                 .log().all()
                 .extract();
+
+        ConsumableTicket ticket = ticketRepository.findByMemberId(1L)
+                .orElseThrow();
+
+        assertAll(
+                () -> assertEquals(200, result.statusCode()),
+                () -> assertEquals(9, ticket.getRemainingTimes())
+        );
     }
 }
