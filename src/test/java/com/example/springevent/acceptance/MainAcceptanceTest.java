@@ -35,7 +35,7 @@ public class MainAcceptanceTest {
         RestAssured.port = port;
     }
 
-    @DisplayName("메인 API 호출 통합 테스트(이벤트 발행, 구독 확인)")
+    @DisplayName("메인 API 호출 통합 테스트(이벤트 발행, 구독 확인) - 정상 호출인 경우")
     @Test
     void mainAcceptanceTest() {
         // given
@@ -60,6 +60,34 @@ public class MainAcceptanceTest {
         assertAll(
                 () -> assertEquals(200, result.statusCode()),
                 () -> assertEquals(9, ticket.getRemainingTimes())
+        );
+    }
+
+    @DisplayName("메인 API 호출 통합 테스트(이벤트 발행, 구독 확인) - 비즈니스 로직에서 예외가 발생한 경우")
+    @Test
+    void mainAcceptanceTestWhenException() {
+        // given
+        String accessToken = jwtManager.createAccessToken(1L);
+
+        // when
+        ExtractableResponse<Response> result = RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .queryParam("message", "ex")
+                .when()
+                .get("/main/1/sample")
+                .then()
+                .log().all()
+                .extract();
+
+        ConsumableTicket ticket = ticketRepository.findByMemberId(1L)
+                .orElseThrow();
+
+        // then
+        assertAll(
+                () -> assertEquals(403, result.statusCode()),
+                () -> assertEquals(10, ticket.getRemainingTimes())
         );
     }
 }
