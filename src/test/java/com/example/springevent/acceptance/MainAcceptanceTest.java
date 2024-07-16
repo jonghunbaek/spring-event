@@ -39,20 +39,10 @@ public class MainAcceptanceTest {
     @Test
     void mainAcceptanceTest() {
         // given
-        String accessToken = jwtManager.createAccessToken(1L);
+        String userId = "1";
+        String accessToken = jwtManager.createAccessToken(Long.parseLong(userId));
 
-        ExtractableResponse<Response> result = RestAssured.given()
-                .log().all()
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .queryParam("message", "test message")
-                // when
-                .when()
-                .get("/main/1/sample")
-                // then
-                .then()
-                .log().all()
-                .extract();
+        ExtractableResponse<Response> result = getResult(accessToken, "test message", userId);
 
         ConsumableTicket ticket = ticketRepository.findByMemberId(1L)
                 .orElseThrow();
@@ -67,19 +57,11 @@ public class MainAcceptanceTest {
     @Test
     void mainAcceptanceTestWhenException() {
         // given
-        String accessToken = jwtManager.createAccessToken(1L);
+        String userId = "1";
+        String accessToken = jwtManager.createAccessToken(Long.parseLong(userId));
 
         // when
-        ExtractableResponse<Response> result = RestAssured.given()
-                .log().all()
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .queryParam("message", "ex")
-                .when()
-                .get("/main/1/sample")
-                .then()
-                .log().all()
-                .extract();
+        ExtractableResponse<Response> result = getResult(accessToken, "ex", userId);
 
         ConsumableTicket ticket = ticketRepository.findByMemberId(1L)
                 .orElseThrow();
@@ -89,5 +71,18 @@ public class MainAcceptanceTest {
                 () -> assertEquals(403, result.statusCode()),
                 () -> assertEquals(10, ticket.getRemainingTimes())
         );
+    }
+
+    private static ExtractableResponse<Response> getResult(String accessToken, String message, String userId) {
+        return RestAssured.given()
+                .log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .queryParam("message", message)
+                .when()
+                .get("/main/" + userId + "/sample")
+                .then()
+                .log().all()
+                .extract();
     }
 }
