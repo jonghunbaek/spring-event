@@ -16,12 +16,12 @@ public class MainService {
     @Transactional
     public void getMessage(long memberId, String message) {
         eventPublisher.publishEvent(memberId);
-        
+
+        if ("ex".equals(message)) {
+            throw new IllegalArgumentException("비즈니스 로직 예외 발생!");
+        }
+
         // 비즈니스 로직을 수행했다고 가정
         log.info("message :: {}", message);
-        
-        if ("ex".equals(message)) {
-            throw new IllegalStateException("예외 발생");
-        }
     }
 }

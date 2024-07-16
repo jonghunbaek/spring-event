@@ -25,6 +25,10 @@ public class TicketEventListener {
         ConsumableTicket consumableTicket = ticketRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalStateException("존재하는 이용권이 없습니다."));
 
+        if (memberId.intValue() == 3) {
+            throw new IllegalArgumentException("이벤트 리스너 예외 발생!");
+        }
+
         consumableTicket.deductRemainigTimes();
 
         ticketCacheManager.updateTicketCache(consumableTicket);
