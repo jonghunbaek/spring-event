@@ -14,7 +14,7 @@ public class MainService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public void getMessage(long memberId, String message) {
+    public String getMessage(long memberId, String message) {
         eventPublisher.publishEvent(memberId);
 
         if ("ex".equals(message)) {
@@ -23,5 +23,7 @@ public class MainService {
 
         // 비즈니스 로직을 수행했다고 가정
         log.info("message :: {}", message);
+
+        return message;
     }
 }

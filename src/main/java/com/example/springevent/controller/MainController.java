@@ -12,7 +12,7 @@ public class MainController {
     private final MainService mainService;
 
     @GetMapping("{memberId}/sample")
-    public void getSampleApi(@PathVariable long memberId, @RequestParam String message) {
-        mainService.getMessage(memberId, message);
+    public String getSampleApi(@PathVariable long memberId, @RequestParam String message) {
+        return mainService.getMessage(memberId, message);
     }
 }
