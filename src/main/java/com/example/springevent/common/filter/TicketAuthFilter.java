@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,6 +20,7 @@ import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class TicketAuthFilter extends OncePerRequestFilter {
@@ -31,8 +33,8 @@ public class TicketAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String requestURI = request.getRequestURI();
-        System.out.println(requestURI);
-        return requestURI.contains("sign-in") || requestURI.contains("sign-up");
+        log.info("request uri :: {}", requestURI);
+        return requestURI.contains("sign-in") || requestURI.contains("sign-up") || requestURI.contains("h2-console");
     }
 
     /**

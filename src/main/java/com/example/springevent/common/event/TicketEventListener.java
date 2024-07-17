@@ -25,7 +25,7 @@ public class TicketEventListener {
         ConsumableTicket consumableTicket = ticketRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalStateException("존재하는 이용권이 없습니다."));
 
-        if (memberId.intValue() == 3) {
+        if (memberId.intValue() == 2) {
             throw new IllegalArgumentException("이벤트 리스너 예외 발생!");
         }
 
