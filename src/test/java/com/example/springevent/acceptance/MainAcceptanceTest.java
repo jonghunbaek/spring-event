@@ -7,7 +7,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,7 +54,7 @@ public class MainAcceptanceTest {
 
     @DisplayName("메인 API 호출 통합 테스트(이벤트 발행, 구독 확인) - 비즈니스 로직에서 예외가 발생한 경우")
     @Test
-    void mainAcceptanceTestWhenException() {
+    void mainAcceptanceTestWhenBusinessException() {
         // given
         String userId = "1";
         String accessToken = jwtManager.createAccessToken(Long.parseLong(userId));
@@ -68,7 +67,28 @@ public class MainAcceptanceTest {
 
         // then
         assertAll(
-                () -> assertEquals(403, result.statusCode()),
+                () -> assertEquals(400, result.statusCode()),
+                () -> assertEquals(10, ticket.getRemainingTimes())
+        );
+    }
+
+    // TODO :: 이벤트 리스너에서 예외가 발생하면 400응답이 가야하는데 200응답으로 정상처리 됨ㅅ
+    @DisplayName("메인 API 호출 통합 테스트(이벤트 발행, 구독 확인) - 이벤트 리스너에서 예외가 발생한 경우")
+    @Test
+    void mainAcceptanceTestWhenEventListenerException() {
+        // given
+        String userId = "2";
+        String accessToken = jwtManager.createAccessToken(Long.parseLong(userId));
+
+        // when
+        ExtractableResponse<Response> result = getResult(accessToken, "test message", userId);
+
+        ConsumableTicket ticket = ticketRepository.findByMemberId(1L)
+                .orElseThrow();
+
+        // then
+        assertAll(
+                () -> assertEquals(400, result.statusCode()),
                 () -> assertEquals(10, ticket.getRemainingTimes())
         );
     }
