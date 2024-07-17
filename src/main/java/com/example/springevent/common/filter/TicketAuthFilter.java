@@ -34,7 +34,7 @@ public class TicketAuthFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String requestURI = request.getRequestURI();
         log.info("request uri :: {}", requestURI);
-        return requestURI.contains("sign-in") || requestURI.contains("sign-up") || requestURI.contains("h2-console");
+        return requestURI.contains("sign-in") || requestURI.contains("sign-up") || requestURI.contains("h2-console") || requestURI.contains("tickets");
     }
 
     /**
