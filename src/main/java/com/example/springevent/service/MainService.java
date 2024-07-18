@@ -1,8 +1,8 @@
 package com.example.springevent.service;
 
+import com.example.springevent.common.event.TicketEventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MainService {
 
-    private final ApplicationEventPublisher eventPublisher;
+    private final TicketEventPublisher ticketEventPublisher;
 
     @Transactional
     public String getMessage(long memberId, String message) {
-        eventPublisher.publishEvent(memberId);
+        ticketEventPublisher.publishTicketDeductionEvent(memberId);
 
         if ("ex".equals(message)) {
             throw new IllegalArgumentException("비즈니스 로직 예외 발생!");
