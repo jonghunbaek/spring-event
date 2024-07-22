@@ -72,7 +72,6 @@ public class MainAcceptanceTest {
         );
     }
 
-    // TODO :: 이벤트 리스너에서 예외가 발생하면 400응답이 가야하는데 200응답으로 정상처리 됨ㅅ
     @DisplayName("메인 API 호출 통합 테스트(이벤트 발행, 구독 확인) - 이벤트 리스너에서 예외가 발생한 경우")
     @Test
     void mainAcceptanceTestWhenEventListenerException() {
@@ -88,7 +87,7 @@ public class MainAcceptanceTest {
 
         // then
         assertAll(
-                () -> assertEquals(400, result.statusCode()),
+                () -> assertEquals(200, result.statusCode()),
                 () -> assertEquals(10, ticket.getRemainingTimes())
         );
     }

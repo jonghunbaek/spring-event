@@ -52,4 +52,20 @@ class MainServiceTest {
         // then
         assertThat(ticket.getRemainingTimes()).isEqualTo(10);
     }
+
+    // TODO :: 격리수준 때문에 개수 차감이 제대로 반영되지 않는 듯
+    @DisplayName("이벤트 리스너가 비동기로 동작하는지 확인한다.")
+    @Test
+    void listenAsync() {
+        // given
+        for (int i=0; i<10; i++) {
+            mainService.getMessage(1L, "async");
+        }
+
+        // when
+        TicketCache ticket = ticketCacheManager.getTicket(1L);
+
+        // then
+        assertThat(ticket.getRemainingTimes()).isEqualTo(0);
+    }
 }
