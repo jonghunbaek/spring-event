@@ -24,10 +24,17 @@ spring:
   #Redis ??
   data:
     redis:
-      host: localhost
+      host: 172.24.242.155
       port: 6379
 
 secret-key: NiOeyFbN1Gqo10bPgUyTFsRMkJpGLXSvGP04eFqj5B30r5TcrtlSXfQ7TndvYjNvfkEKLqILn0j1SmKODO6Yw3JpBBgI6nVPEbhqxeY1qbPSFGyzyEVxnl4bQcrnVneI
 access-expiration-hours: 1800
 refresh-expiration-hours: 1800
 issuer: test
+
+logging:
+  level:
+    org.springframework.transaction: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.springframework.jdbc.datasource.DataSourceTransactionManager: DEBUG
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
